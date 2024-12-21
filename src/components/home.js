@@ -124,7 +124,7 @@ const ProductSection = () => {
           <div class="flex flex-wrap ">
             {isMobile && (
               <AnimatePresence>
-                <div className="flex overflow-scroll h-full space-x-4">
+                <div className="flex overflow-scroll element py-5 h-full space-x-4">
                   {products.map((product) => (
                     <motion.div
                       initial={{

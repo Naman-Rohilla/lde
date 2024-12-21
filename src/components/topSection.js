@@ -42,14 +42,24 @@ export default function TopSection() {
         <img src={imgSrc} className="bg-cover w-full h-full" />
       </div>
       <div className="absolute top-0 h-full w-screen z-2 bg-primary opacity-90"></div>
-      <div className="absolute top-1/2 pl-2 z-2">
+      <div
+        className="absolute top-1/2 pl-2"
+        style={{
+          zIndex: 200,
+        }}
+      >
         <img
           src="arrowdown.png"
           className="rotate-90 h-14 w-14 p-2  rounded-full hover:bg-primary"
           onClick={() => decreaseIndex()}
         />
       </div>
-      <div className="absolute top-1/2 right-0 pr-2 z-2">
+      <div
+        className="absolute top-1/2 right-0 pr-2"
+        style={{
+          zIndex: 200,
+        }}
+      >
         <img
           src="arrowdown.png"
           className="-rotate-90 h-14 w-14 p-2 rounded-full hover:bg-primary"

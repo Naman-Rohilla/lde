@@ -37,7 +37,7 @@ export default function ValuesSection() {
             </div>
           </div>
         </div>
-        <div class="flex md:flex-wrap overflow-scroll space-x-2 md:space-x-0">
+        <div class="flex md:flex-wrap overflow-scroll element space-x-2 md:space-x-0">
           <div class="w-full shrink-0 md:px-4  md:w-1/2 lg:w-1/4">
             <div class="bg-white mb-12 group wow fadeInUp" data-wow-delay=".1s">
               <div
