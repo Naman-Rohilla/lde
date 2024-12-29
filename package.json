@@ -6,6 +6,9 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "crypto-js": "^4.2.0",
+    "emailjs-com": "^3.2.0",
+    "firebase": "^11.1.0",
     "framer-motion": "^11.15.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -13,8 +16,11 @@
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.27.0",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.15.0",
     "react-swipeable": "^7.0.1",
     "sass": "^1.80.3",
+    "tailwind-scrollbar": "^3.1.0",
+    "uuid": "^11.0.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

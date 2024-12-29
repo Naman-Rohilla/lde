@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "./root";
 import Home from "./components/home";
+import InfraById from "./components/infraById";
+import Admin from "./components/admin";
 
 const router = createBrowserRouter([
   {
@@ -11,10 +13,14 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-      // {
-      //   path: "/about",
-      //   element: <About />,
-      // },
+      {
+        path: "/admin",
+        element: <Admin />,
+      },
+      {
+        path: "/infrastructure",
+        element: <InfraById />,
+      },
       // {
       //   path: "movie",
       //   element: <Movie />,

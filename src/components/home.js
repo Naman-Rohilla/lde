@@ -4,6 +4,8 @@ import TopSection from "./topSection";
 import ValuesSection from "./valuesSection";
 import { AnimatePresence, motion } from "framer-motion";
 import InfraSection from "./InfraSection";
+import emailjs from "emailjs-com";
+import GridLoader from "react-spinners/GridLoader";
 
 const productArray = [
   {
@@ -171,7 +173,7 @@ const ProductSection = () => {
               </AnimatePresence>
             )}
             <div class="w-full hidden sm:flex justify-between items-center">
-              {!isMobile && (
+              {/* {!isMobile && (
                 <div>
                   <img
                     onClick={handlePrevious}
@@ -179,7 +181,7 @@ const ProductSection = () => {
                     className="rotate-90 h-8 w-8 p-2 rounded-full bg-primary bg-opacity-80 hover:bg-opacity-95 hover:scale-105 hover:ease-in-out hover:duration-300"
                   />
                 </div>
-              )}
+              )} */}
               <AnimatePresence>
                 {visibleProducts.map((product) => (
                   <motion.div
@@ -223,12 +225,8 @@ const ProductSection = () => {
                 ))}
               </AnimatePresence>
               {!isMobile && (
-                <div>
-                  <img
-                    onClick={handleNext}
-                    src="arrowdown.png"
-                    className="-rotate-90 h-8 w-8 p-2 rounded-full bg-primary bg-opacity-80 hover:bg-opacity-95 hover:scale-105 hover:ease-in-out hover:duration-300"
-                  />
+                <div className="text-primary opacity-80 hover:opacity-100  cursor-pointer bg-opacity-80 hover:bg-opacity-95 hover:scale-105 hover:ease-in-out hover:duration-300">
+                  View More...
                 </div>
               )}
             </div>
@@ -240,8 +238,75 @@ const ProductSection = () => {
 };
 
 export default function Home() {
+  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event) => {
+    console.log("started");
+
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
+    if (data.phone.toString().length != 10) {
+      setErrorMessage("phone number should be of length 10");
+
+      return;
+    } else {
+      setErrorMessage("");
+    }
+    setLoading(true);
+
+    const emailData = {
+      name: data.fullName,
+      message: data.message,
+      email: data.email,
+      number: data.phone,
+      origin: "From contact component",
+    };
+
+    emailjs
+      .send(
+        process.env.REACT_APP_EMAIL_SERVICE_ID,
+        process.env.REACT_APP_EMAIL_TEMPLATE_ID,
+        emailData,
+        process.env.REACT_APP_PUBLIC_KEY
+      )
+      .then(
+        (result) => {
+          console.log("Email sent successfully:", result.text);
+          alert("Email sent successfully!");
+        },
+        (error) => {
+          console.error("Error sending email:", error.text);
+          alert("Failed to send email. Please try again later.");
+        }
+      )
+      .finally(() => {
+        setLoading(false);
+        event.target.reset();
+      });
+  };
   return (
     <>
+      {loading && (
+        <div
+          style={{
+            zIndex: 9999,
+          }}
+          className="h-screen w-full fixed top-0 lef-0 bg-gray-800 bg-opacity-80 flex justify-center items-center text-white"
+        >
+          <GridLoader
+            color={"white"}
+            loading={loading}
+            size={20}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+            className="shadow-2xl"
+          />
+        </div>
+      )}
       <TopSection />
       <ValuesSection />
       <ProductSection />
@@ -3304,7 +3369,7 @@ export default function Home() {
                 <h3 class="font-semibold mb-8 text-2xl md:text-[26px]">
                   Send us a Message
                 </h3>
-                <form>
+                <form action="processing" method="POST" onSubmit={handleSubmit}>
                   <div class="mb-6">
                     <label for="fullName" class="block text-xs text-dark">
                       Full Name*
@@ -3313,6 +3378,7 @@ export default function Home() {
                       type="text"
                       name="fullName"
                       placeholder="your name"
+                      required
                       class="
                       w-full
                       border-0 border-b border-[#f1f1f1]
@@ -3329,6 +3395,7 @@ export default function Home() {
                       type="email"
                       name="email"
                       placeholder="example@yourmail.com"
+                      required
                       class="
                       w-full
                       border-0 border-b border-[#f1f1f1]
@@ -3342,8 +3409,9 @@ export default function Home() {
                       Phone*
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="phone"
+                      required
                       placeholder="your 10 digit number"
                       class="
                       w-full
@@ -3352,7 +3420,9 @@ export default function Home() {
                       py-4
                     "
                     />
+                    <span className="text-red-600 text-xs">{errorMessage}</span>
                   </div>
+
                   <div class="mb-6">
                     <label for="message" class="block text-xs text-dark">
                       Message*
@@ -3360,6 +3430,7 @@ export default function Home() {
                     <textarea
                       name="message"
                       rows="1"
+                      required
                       placeholder="type your message here"
                       class="
                       w-full
@@ -3389,7 +3460,6 @@ export default function Home() {
                       duration-300
                       ease-in-out
                     "
-                      disabled
                     >
                       Send Message
                     </button>
