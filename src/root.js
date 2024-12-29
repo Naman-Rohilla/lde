@@ -13,11 +13,18 @@ function Root() {
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
-    script.src = "https://embed.tawk.to/6771586249e2fd8dfe003128/1ig9c2h08";
+    script.src = process.env.REACT_APP_CHATBOT_URL;
     script.charset = "UTF-8";
     script.setAttribute("crossorigin", "*");
 
     document.body.appendChild(script);
+
+    script.onload = () => {
+      console.log("Tawk.to script loaded.");
+      if (window.Tawk_API && window.Tawk_LoadStart) {
+        console.log("Tawk.to is initialized.");
+      }
+    };
 
     return () => {
       document.body.removeChild(script);
