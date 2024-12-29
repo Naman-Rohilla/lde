@@ -91,13 +91,24 @@ export default function Admin() {
           ? ref(db, `lde/infrastructure/${unique_id}`)
           : ref(db, `lde/packaging/${unique_id}`);
 
-      await set(dbRef, {
-        id: unique_id,
-        title: formData.title,
-        description: formData.description,
-        summary: formData.summary,
-        url: formData.url,
-      });
+      if (dataType == INFRA) {
+        await set(dbRef, {
+          id: unique_id,
+          name: formData.name,
+          title: formData.title,
+          description: formData.description,
+          summary: formData.summary,
+          url: formData.url,
+        });
+      } else {
+        await set(dbRef, {
+          id: unique_id,
+          title: formData.title,
+          description: formData.description,
+          summary: formData.summary,
+          url: formData.url,
+        });
+      }
 
       alert("Data and photo saved successfully!");
     } catch (error) {
@@ -128,14 +139,26 @@ export default function Admin() {
     const data = await response.json();
     console.log(data.secure_url);
 
-    const formData = {
-      title: event.target.title.value,
-      description: event.target.description.value,
-      summary: event.target.summary.value,
-      url: data.secure_url,
-    };
+    if (dataType == INFRA) {
+      const formData = {
+        name: event.target.name.value,
+        title: event.target.title.value,
+        description: event.target.description.value,
+        summary: event.target.summary.value,
+        url: data.secure_url,
+      };
 
-    await saveFormData(formData);
+      await saveFormData(formData);
+    } else {
+      const formData = {
+        title: event.target.title.value,
+        description: event.target.description.value,
+        summary: event.target.summary.value,
+        url: data.secure_url,
+      };
+
+      await saveFormData(formData);
+    }
     event.target.reset();
     setLoading(false);
   };
@@ -444,7 +467,31 @@ export default function Admin() {
                 </div>
                 {dataType !== "none" && write && (
                   <div class="mt-10  gap-y-8 col-span-full">
-                    <div class="sm:col-span-4">
+                    {dataType == INFRA && (
+                      <div class="sm:col-span-4">
+                        <label
+                          for="name"
+                          class="block text-sm/6 font-medium text-gray-900"
+                        >
+                          {dataType} name
+                        </label>
+                        <div class="mt-2">
+                          <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                            <div class="shrink-0 select-none text-base text-gray-500 sm:text-sm/6">
+                              name
+                            </div>
+                            <input
+                              type="text"
+                              name="name"
+                              id="name"
+                              required
+                              class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div class="sm:col-span-4 mt-10">
                       <label
                         for="title"
                         class="block text-sm/6 font-medium text-gray-900"
