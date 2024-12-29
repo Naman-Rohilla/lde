@@ -195,7 +195,7 @@ export default function TopSection() {
             >
               <div class="-mt-14">
                 <img
-                  src="vectorMachine.svg"
+                  src="https://drive.google.com/thumbnail?id=1L89e2SOpcGGyt8C0pf3iIKpb4efm42T2"
                   alt="hero"
                   class="max-w-full mx-auto rounded-t-xl rounded-tr-xl"
                   style={{

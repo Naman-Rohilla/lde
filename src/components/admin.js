@@ -112,11 +112,27 @@ export default function Admin() {
     setLoading(true);
     event.preventDefault();
 
+    const formDataImage = new FormData();
+    console.log(event.target.fileImage.files[0], "fileImage");
+    formDataImage.append("file", event.target.fileImage.files[0]);
+    formDataImage.append("upload_preset", "lde-admin"); // Unsigned preset name
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/djdyzefbx/image/upload`,
+      {
+        method: "POST",
+        body: formDataImage,
+      }
+    );
+
+    const data = await response.json();
+    console.log(data.secure_url);
+
     const formData = {
       title: event.target.title.value,
       description: event.target.description.value,
       summary: event.target.summary.value,
-      url: event.target.coverUrl.value,
+      url: data.secure_url,
     };
 
     await saveFormData(formData);
@@ -497,7 +513,7 @@ export default function Admin() {
 
                     <div class="sm:col-span-4 mt-10">
                       <label
-                        for="coverUrl"
+                        for="fileImage"
                         class="block text-sm/6 font-medium text-gray-900"
                       >
                         {dataType} Cover photo URL
@@ -508,9 +524,9 @@ export default function Admin() {
                             url
                           </div>
                           <input
-                            type="text"
-                            name="coverUrl"
-                            id="coverUrl"
+                            type="file"
+                            name="fileImage"
+                            id="fileImage"
                             required
                             class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                             placeholder=""
