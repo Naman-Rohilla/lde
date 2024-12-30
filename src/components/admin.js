@@ -16,6 +16,10 @@ export default function Admin() {
   const [username, setUsername] = useState(false);
   const [dataType, setDataType] = useState("none");
   const [openSelect, setOpenSelect] = useState(false);
+  const [openSelectType, setOpenSelectType] = useState(false);
+
+  const [infraType, setInfraType] = useState("none");
+
   const [write, setWrite] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
   const [deleteId, setDeleteId] = useState("");
@@ -95,6 +99,7 @@ export default function Admin() {
         await set(dbRef, {
           id: unique_id,
           name: formData.name,
+          type: formData.type,
           title: formData.title,
           description: formData.description,
           summary: formData.summary,
@@ -120,6 +125,10 @@ export default function Admin() {
   };
 
   const handleFormSubmit = async (event) => {
+    if (infraType == "none") {
+      alert("Please select infrastructure type");
+      return;
+    }
     setLoading(true);
     event.preventDefault();
 
@@ -142,6 +151,7 @@ export default function Admin() {
     if (dataType == INFRA) {
       const formData = {
         name: event.target.name.value,
+        type: event.target.type.value,
         title: event.target.title.value,
         description: event.target.description.value,
         summary: event.target.summary.value,
@@ -468,28 +478,136 @@ export default function Admin() {
                 {dataType !== "none" && write && (
                   <div class="mt-10  gap-y-8 col-span-full">
                     {dataType == INFRA && (
-                      <div class="sm:col-span-4">
-                        <label
-                          for="name"
-                          class="block text-sm/6 font-medium text-gray-900"
-                        >
-                          {dataType} name
-                        </label>
-                        <div class="mt-2">
-                          <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                            <div class="shrink-0 select-none text-base text-gray-500 sm:text-sm/6">
-                              name
+                      <>
+                        <div class="sm:col-span-4">
+                          <label
+                            for="name"
+                            class="block text-sm/6 font-medium text-gray-900"
+                          >
+                            {dataType} name
+                          </label>
+                          <div class="mt-2">
+                            <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                              <div class="shrink-0 select-none text-base text-gray-500 sm:text-sm/6">
+                                name
+                              </div>
+                              <input
+                                type="text"
+                                name="name"
+                                id="name"
+                                required
+                                class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                              />
                             </div>
-                            <input
-                              type="text"
-                              name="name"
-                              id="name"
-                              required
-                              class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                            />
                           </div>
                         </div>
-                      </div>
+                        <div className="sm:col-span-4 mt-10">
+                          <label
+                            id="listbox-label"
+                            class="block text-sm/6 font-medium text-gray-900"
+                          >
+                            {dataType} type
+                          </label>
+                          <div class="relative mt-2">
+                            <button
+                              type="button"
+                              class="grid w-full cursor-default grid-cols-1 border-gray-300 border rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-primary focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                              aria-haspopup="listbox"
+                              aria-expanded="true"
+                              aria-labelledby="listbox-label"
+                              onClick={() => setOpenSelectType(!openSelectType)}
+                            >
+                              <span class="col-start-1 row-start-1 flex items-center gap-3 pr-6">
+                                <span class="block truncate">{infraType}</span>
+                              </span>
+                              <svg
+                                class="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                aria-hidden="true"
+                                data-slot="icon"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M5.22 10.22a.75.75 0 0 1 1.06 0L8 11.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0l-2.25-2.25a.75.75 0 0 1 0-1.06ZM10.78 5.78a.75.75 0 0 1-1.06 0L8 4.06 6.28 5.78a.75.75 0 0 1-1.06-1.06l2.25-2.25a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1 0 1.06Z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                            </button>
+
+                            {openSelectType && (
+                              <ul
+                                class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base ring-1 shadow-lg ring-black/5 focus:outline-hidden sm:text-sm"
+                                tabindex="-1"
+                                role="listbox"
+                                aria-labelledby="listbox-label"
+                                aria-activedescendant="listbox-option-3"
+                              >
+                                <li
+                                  class="relative cursor-default py-2 pr-9 pl-2 text-gray-900 select-none hover:bg-primary hover:text-white mx-4 rounded-lg"
+                                  id="listbox-option-0"
+                                  role="option"
+                                  onClick={() => {
+                                    setInfraType("machine");
+                                    setOpenSelectType(false);
+                                  }}
+                                >
+                                  <div class="flex items-center">
+                                    <span class="block truncate font-normal">
+                                      Machine
+                                    </span>
+                                  </div>
+                                </li>
+                                <li
+                                  class="relative cursor-default py-2 pr-9 pl-2 text-gray-900 select-none hover:bg-primary hover:text-white mx-4 rounded-lg"
+                                  id="listbox-option-0"
+                                  role="option"
+                                  onClick={() => {
+                                    setInfraType("auto_rejection_convysystem");
+                                    setOpenSelectType(false);
+                                  }}
+                                >
+                                  <div class="flex items-center">
+                                    <span class="block truncate font-normal">
+                                      Auto_Rejection_ConvySystem
+                                    </span>
+                                  </div>
+                                </li>
+                                <li
+                                  class="relative cursor-default py-2 pr-9 pl-2 text-gray-900 select-none hover:bg-primary hover:text-white mx-4 rounded-lg"
+                                  id="listbox-option-0"
+                                  role="option"
+                                  onClick={() => {
+                                    setInfraType("automation");
+                                    setOpenSelectType(false);
+                                  }}
+                                >
+                                  <div class="flex items-center">
+                                    <span class="block truncate font-normal">
+                                      Automation
+                                    </span>
+                                  </div>
+                                </li>
+                                <li
+                                  class="relative cursor-default py-2 pr-9 pl-2 text-gray-900 select-none hover:bg-primary hover:text-white mx-4 rounded-lg"
+                                  id="listbox-option-0"
+                                  role="option"
+                                  onClick={() => {
+                                    setInfraType("conveyor");
+                                    setOpenSelectType(false);
+                                  }}
+                                >
+                                  <div class="flex items-center">
+                                    <span class="block truncate font-normal">
+                                      Conveyor
+                                    </span>
+                                  </div>
+                                </li>
+                              </ul>
+                            )}
+                          </div>
+                        </div>
+                      </>
                     )}
                     <div class="sm:col-span-4 mt-10">
                       <label
@@ -554,7 +672,7 @@ export default function Admin() {
                         ></textarea>
                       </div>
                       <p class="mt-3 text-sm/6 text-gray-600">
-                        Write a few sentences about packaging.
+                        Write a few sentences about {dataType}
                       </p>
                     </div>
 
@@ -594,7 +712,11 @@ export default function Admin() {
                           <img src={ia.url} className="h-40 w-48" />
                         </span>
                         <div className="flex flex-col w-full">
+                          <span className="font-bold">{ia.name}</span>
                           <span className="font-bold">{ia.title}</span>
+                          <span className="font-bold border border-lime-500 text-lime-500 mt-1 w-20 text-sm flex justify-center rounded-2xl">
+                            {ia.type}
+                          </span>
                           <span className="pt-2">{ia.description}</span>
                           <span className="pt-4 w-full flex flex-wrap">
                             {ia.summary}
